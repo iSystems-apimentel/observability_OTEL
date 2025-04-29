@@ -6,10 +6,11 @@ services:
     volumes:
       - ./shared/tempo:/etc
       - ./tempo-data:/var/tempo
+      - ../tempo:/etc/tempo-config
     ports:
       - "3200:3200"
     entrypoint: sh -c "
-      wget --no-check-certificate -O /etc/tempo.yml https://raw.githubusercontent.com/aussiearef/grafana-udemy/main/tempo/tempo.yml &&
+      cp /etc/tempo-config/tempo.yml /etc/tempo.yml &&
       exec /tempo -config.file=/etc/tempo.yml"
 
   prometheus:
@@ -17,6 +18,7 @@ services:
     user: root
     volumes:
       - ./shared/prometheus:/etc/prometheus
+      - ../prometheus:/etc/prometheus-config
     ports:
       - "9090:9090"
     env_file:
@@ -25,19 +27,22 @@ services:
       mkdir -p /run/secrets &&
       echo $$API_USER > /run/secrets/prometheus_basic_auth_username &&
       echo $$API_PASSWORD > /run/secrets/prometheus_basic_auth_password &&
-      wget --no-check-certificate -O /etc/prometheus/prometheus-local.yml ../prometheus/prometheus.yml &&
+      cp /etc/prometheus-config/prometheus.yml /etc/prometheus/prometheus-local.yml &&
       exec /bin/prometheus --config.file=/etc/prometheus/prometheus-local.yml --web.enable-remote-write-receiver"
 
   loki:
     image: grafana/loki:latest
     user: root
-    command:
-      - "-config.file=/etc/loki/local-config.yaml"
     volumes:
       - ./shared/loki/chunks:/loki/chunks/
       - ./shared/loki/rules:/loki/rules/
+      - ../loki:/etc/loki-config
+    command:
+      - "-config.file=/etc/loki/local-config.yaml"
     ports:
       - "3100:3100"
+    entrypoint: sh -c "
+      cp /etc/loki-config/local-config.yaml /etc/loki/local-config.yaml"
 
 
   alloy:
@@ -46,13 +51,12 @@ services:
       - "-config.file=/etc/alloy/config.alloy"
     volumes:
       - ./shared/alloy:/etc/alloy
+      - ../alloy:/etc/alloy-config
     ports:
       - "4317:4317"
       - "4318:4318"
     entrypoint: sh -c "
-      apt-get update -y &&
-      apt-get -y install wget &&
-      wget --no-check-certificate -O /etc/alloy/config.alloy https://raw.githubusercontent.com/aussiearef/grafana-udemy/main/alloy/config.alloy &&
+      cp /etc/alloy-config/config.alloy /etc/alloy/config.alloy &&
       exec /bin/alloy run /etc/alloy/config.alloy"
 
   grafana:
@@ -62,6 +66,7 @@ services:
       - ./shared/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./shared/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./shared/grafana/dashboards:/var/lib/grafana/dashboards
+      - ../grafana:/etc/grafana-config
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=false
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -71,8 +76,10 @@ services:
       - "3000:3000"
     entrypoint: sh -c "
       mkdir -p /var/lib/grafana/dashboards &&
-      wget --no-check-certificate -O /etc/grafana/provisioning/dashboards/dashboards.yml https://raw.githubusercontent.com/aussiearef/grafana-udemy/main/grafana/dashboards.yml &&
-      wget --no-check-certificate -O /etc/grafana/provisioning/datasources/datasources.yml https://raw.githubusercontent.com/aussiearef/grafana-udemy/main/grafana/datasources.yml &&
+      mkdir -p /etc/grafana/provisioning/dashboards &&
+      mkdir -p /etc/grafana/provisioning/datasources &&
+      cp /etc/grafana-config/dashboards.yml /etc/grafana/provisioning/dashboards/dashboards.yml &&
+      cp /etc/grafana-config/datasources.yml /etc/grafana/provisioning/datasources/datasources.yml &&
       exec /run.sh"
 
  
