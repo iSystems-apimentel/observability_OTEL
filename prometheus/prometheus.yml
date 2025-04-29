@@ -1,0 +1,28 @@
+global:
+  scrape_interval: 30s
+
+scrape_configs:
+  - job_name: 'guest-hotelsoftware-api'
+    metrics_path: /metrics
+    scheme: https
+    basic_auth:
+      username_file: /run/secrets/prometheus_basic_auth_username
+      password_file: /run/secrets/prometheus_basic_auth_password
+    static_configs:
+      - targets: ['api.guest-hotelsoftware.com']
+
+rule_files:
+  - "rule/alerts.yml"
+  - "rule/recording_rule.yml"
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    basic_auth:
+      username_file: /run/secrets/prometheus_basic_auth_username
+      password_file: /run/secrets/prometheus_basic_auth_password
+  - static_configs:
+    - targets:
+       - localhost:9093
+
+
