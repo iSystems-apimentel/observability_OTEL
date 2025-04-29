@@ -52,7 +52,7 @@ services:
      entrypoint: sh -c "
        apt-get update -y &&
        apt-get -y install wget &&
-       wget --no-check-certificate -O /etc/alloy/config.alloy https://raw.githubusercontent.com/iSystems-apimentel/observability_OTEL/main/alloy/config.alloy &&
+       wget --no-check-certificate -O /etc/alloy/config.alloy https://raw.githubusercontent.com/iSystems-apimentel/observability_OTEL/main/alloy/config-all-signals.alloy &&
        exec /bin/alloy run /etc/alloy/config.alloy"
  
    grafana:
