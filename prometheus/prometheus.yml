@@ -1,6 +1,11 @@
 global:
   scrape_interval: 60s
 
+remote_write:
+  - url: "http://otelcol:9090/api/v1/write"  # Assuming otelcol is on the same network
+    # Add authentication if required (if otelcol requires auth)
+
+
 scrape_configs:
   - job_name: 'guest-hotelsoftware-api'
     metrics_path: /metrics
