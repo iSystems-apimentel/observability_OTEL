@@ -16,6 +16,9 @@ compactor:
 
 metrics_generator:
   local-blocks: true
+  processor:
+    local_blocks:
+      flush_to_storage: true
   registry:
     external_labels:
       source: tempo
