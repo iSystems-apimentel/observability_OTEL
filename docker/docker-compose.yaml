@@ -44,7 +44,6 @@ services:
     entrypoint: sh -c "
       cp /etc/loki-config/local-config.yaml /etc/loki/local-config.yaml"
 
-
   alloy:
     image: grafana/alloy:latest
     command:
@@ -81,6 +80,13 @@ services:
       cp /etc/grafana-config/dashboards.yml /etc/grafana/provisioning/dashboards/dashboards.yml &&
       cp /etc/grafana-config/datasources.yml /etc/grafana/provisioning/datasources/datasources.yml &&
       exec /run.sh"
+
+aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    container_name: aspire-dashboard
+    ports:
+      - "18888:18888"  # Dashboard UI: host port 18888 maps to container port 18888
+      - "15001:18889"  # OTLP gRPC endpoint: host port 15001 maps to container port 18889
 
  
 volumes:
