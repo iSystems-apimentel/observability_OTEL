@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 60s
+
+
+
+rule_files:
+  - "rule/alerts.yml"
+  - "rule/recording_rule.yml"
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    basic_auth:
+      username_file: /run/secrets/prometheus_basic_auth_username
+      password_file: /run/secrets/prometheus_basic_auth_password
+  - static_configs:
+    - targets:
+       - localhost:9093
+
