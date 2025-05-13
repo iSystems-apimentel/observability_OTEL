@@ -15,6 +15,7 @@ compactor:
     block_retention: 48h                # configure total trace retention here
 
 metrics_generator:
+  local-blocks: true
   registry:
     external_labels:
       source: tempo
