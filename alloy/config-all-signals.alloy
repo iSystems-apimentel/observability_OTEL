@@ -49,7 +49,7 @@ otelcol.exporter.otlphttp "tempo" {
 
 otelcol.exporter.otlphttp "loki" {
     client {
-        endpoint = "http://loki:3100"
+        endpoint = "http://loki:3100/otlp"
         tls {
             insecure             = true
             insecure_skip_verify = true
