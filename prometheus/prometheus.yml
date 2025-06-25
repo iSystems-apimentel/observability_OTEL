@@ -10,6 +10,7 @@ scrape_configs:
       password_file: /run/secrets/prometheus_basic_auth_password
     static_configs:
       - targets: ["api.guest-hotelsoftware.com"]
+      
   - job_name: "uptime-isystems"
     metrics_path: /metrics
     scrape_interval: 60s
