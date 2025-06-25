@@ -17,8 +17,8 @@ scrape_configs:
     scheme: http
     static_configs:
         - targets: ["129.146.58.223:3001"]
-    basic_auth:
-        password_file: /run/secrets/uptimekuma_apikey
+    authorization:
+        credentials_file: /run/secrets/uptimekuma_apikey
 
 rule_files:
   - "rule/alerts.yml"
