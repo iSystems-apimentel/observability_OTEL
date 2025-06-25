@@ -2,14 +2,22 @@ global:
   scrape_interval: 60s
 
 scrape_configs:
-  - job_name: 'guest-hotelsoftware-api'
+  - job_name: "guest-hotelsoftware-api"
     metrics_path: /metrics
     scheme: https
     basic_auth:
       username_file: /run/secrets/prometheus_basic_auth_username
       password_file: /run/secrets/prometheus_basic_auth_password
     static_configs:
-      - targets: ['api.guest-hotelsoftware.com']
+      - targets: ["api.guest-hotelsoftware.com"]
+  - job_name: "uptime-isystems"
+    metrics_path: /metrics
+    scrape_interval: 60s
+    scheme: http
+    static_configs:
+        - targets: ["129.146.58.223:3001"]
+    basic_auth:
+        password_file: /run/secrets/uptimekuma_apikey
 
 rule_files:
   - "rule/alerts.yml"
